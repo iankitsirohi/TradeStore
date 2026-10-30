@@ -62,7 +62,7 @@ Time is injected (`today_provider`), so expiry is tested deterministically.
 
 ## Design diagrams (PlantUML, `docs/`)
 
-`class-diagram.puml`, `sequence-submit-trade.puml`, `sequence-expiry.puml`
+`class-diagram.puml`, `sequence-submit-trade.puml`, `sequence-expiry.puml`. Full HLD/LLD write-up: [`docs/DESIGN.md`](docs/DESIGN.md).
 
 ## Design notes
 
