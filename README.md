@@ -1,4 +1,4 @@
-# Trade Store
+# TradeStore
 
 REST API (Python / Flask / SQLite) that receives trades and stores them under these rules:
 
