@@ -1,0 +1,45 @@
+@startuml
+title Trade Store - class diagram
+class Trade <<frozen dataclass>> {
+  +trade_id: str
+  +version: int
+  +counter_party_id: str
+  +portfolio_id: str
+  +maturity_date: date
+  +created_date: date
+  +expired: bool
+  +to_dict(): dict
+}
+class TradeService {
+  +submit_trade(payload): (Trade, bool)
+  +get_trade(trade_id, version?): Trade
+  +list_versions(trade_id): List<Trade>
+  +list_trades(expired?): List<Trade>
+  +expire_trades(): int
+}
+class TradeRepository {
+  +init_schema()
+  +transaction()
+  +max_version(conn, trade_id): int?
+  +upsert(conn, trade): bool
+  +expire_before(today): int
+  +get(trade_id, version?): Trade?
+  +list_all(): List<Trade>
+  +list_versions(trade_id): List<Trade>
+}
+class ExpiryScheduler {
+  +start()
+  +stop()
+}
+class "validation.parse_trade" as Validation <<function>>
+class TradeStoreError
+TradeStoreError <|-- ValidationError
+TradeStoreError <|-- LowerVersionError
+TradeStoreError <|-- PastMaturityDateError
+TradeStoreError <|-- TradeNotFoundError
+TradeService --> TradeRepository
+TradeService ..> Validation
+Validation ..> Trade : creates
+TradeRepository ..> Trade
+ExpiryScheduler --> TradeService : calls expire_trades()
+@enduml

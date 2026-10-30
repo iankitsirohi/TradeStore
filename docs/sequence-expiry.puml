@@ -1,0 +1,18 @@
+@startuml
+title Automatic expiry
+participant ExpiryScheduler as Sch
+participant TradeService as S
+participant TradeRepository as R
+database SQLite
+actor Client
+
+loop every EXPIRY_INTERVAL_SECONDS
+  Sch -> S : expire_trades()
+  S -> R : expire_before(today)
+  R -> SQLite : UPDATE trades SET expired=1\nWHERE expired=0 AND maturity_date < today
+end
+Client -> S : GET /trades/{id}
+note right: reads also run the sweep first,\nso results are correct between scheduler runs
+S -> R : expire_before(today)
+S -> R : get(id)
+@enduml

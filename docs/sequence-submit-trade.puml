@@ -1,0 +1,29 @@
+@startuml
+title Submit a trade
+actor Client
+participant "Flask API" as API
+participant TradeService as S
+participant TradeRepository as R
+database SQLite
+
+Client -> API : POST /trades {trade}
+API -> S : submit_trade(payload)
+S -> S : parse_trade() (400-class validation)
+alt maturity_date < today
+  S --> API : PastMaturityDateError
+  API --> Client : 422 past_maturity_date
+else valid
+  S -> R : transaction() / BEGIN IMMEDIATE
+  R -> SQLite : max_version(trade_id)
+  alt version < max_version
+    S --> API : LowerVersionError (ROLLBACK)
+    API --> Client : 409 lower_version
+  else version >= max_version
+    S -> R : upsert(trade)
+    R -> SQLite : INSERT OR REPLACE
+    S -> R : COMMIT
+    S --> API : (trade, created)
+    API --> Client : 201 (new) / 200 (same version replaced)
+  end
+end
+@enduml
