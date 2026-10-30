@@ -64,6 +64,10 @@ Time is injected (`today_provider`), so expiry is tested deterministically.
 
 `class-diagram.puml`, `sequence-submit-trade.puml`, `sequence-expiry.puml`. Full HLD/LLD write-up: [`docs/DESIGN.md`](docs/DESIGN.md).
 
+## Production requirements grooming
+
+The implementation targets the original assignment requirements. Before considering a live deployment, review [`docs/REQUIREMENTS_GROOMING.md`](docs/REQUIREMENTS_GROOMING.md) and resolve the business, data, security, scale, and operational questions with stakeholders.
+
 ## Design notes
 
 - Check-then-write uses `BEGIN IMMEDIATE`, so concurrent submissions cannot slip a lower version past the check,
