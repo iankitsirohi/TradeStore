@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Report HIGH and below (informational)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
@@ -59,7 +59,7 @@ jobs:
           severity: HIGH,MEDIUM,LOW
           exit-code: "0"
       - name: Gate - fail the build on CRITICAL vulnerabilities
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
@@ -88,7 +88,7 @@ jobs:
           load: true
           tags: ${{ env.IMAGE }}:${{ github.sha }}
       - name: Gate - fail on CRITICAL vulnerabilities in the image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.IMAGE }}:${{ github.sha }}
           scanners: vuln
